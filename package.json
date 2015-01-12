@@ -1,0 +1,19 @@
+{
+  "name": "linphone",
+  "version": "1.0.0",
+  "description": "linphonec wrapper",
+  "main": "src/linphone.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.dev:z.wieczorek/linphone.git"
+  },
+  "author": "",
+  "license": "ISC" ,
+  "dependencies": {
+    "ini": "1.3.0",
+    "log4js": ">=0.6.21"
+  }
+}
