@@ -1,5 +1,5 @@
 {
-  "name": "local-linphone",
+  "name": "local-dfi-linphone",
   "version": "1.0.3",
   "description": "linphonec wrapper",
   "main": "src/linphone.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.dev:z.wieczorek/linphone.git"
+    "url": "git@gitlab.dev:z.wieczorek/dfi-linphone.git"
   },
   "author": "",
   "license": "ISC",
