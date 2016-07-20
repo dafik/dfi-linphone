@@ -1,6 +1,6 @@
 {
   "name": "local-dfi-linphone",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "linphonec wrapper",
   "main": "src/linphone.js",
   "scripts": {
