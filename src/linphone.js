@@ -1,11 +1,12 @@
-var spawn = require('child_process').spawn;
-var events = require('events');
-var fs = require('fs');
-var crypto = require('crypto');
-var log4js = require('log4js');
-var util = require('util');
-var ini = require('ini');
-var ChildrenManager = require('./childrenManager');
+const spawn = require('child_process').spawn,
+    events = require('events'),
+    fs = require('fs'),
+    crypto = require('crypto'),
+    util = require('util'),
+    ini = require('ini'),
+
+    DebugLogger = require('./debugLogger'),
+    ChildrenManager = require('./childrenManager');
 
 /**
  * @class
@@ -24,7 +25,8 @@ var ChildrenManager = require('./childrenManager');
  * @fires Linphone#CLOSE
  * @fires Linphone#UNREGISTERED
  */
-function Linphone(configuration) {
+function
+Linphone(configuration) {
 
     var config = {
         port: 5060,
@@ -36,7 +38,8 @@ function Linphone(configuration) {
 
     configuration = configuration || config;
 
-    this.logger = log4js.getLogger('Linphone');
+    this.logger = new DebugLogger('Linphone');
+
 
     this._incoming = {};
     this._calls = {};
@@ -71,7 +74,6 @@ function Linphone(configuration) {
     function startLinphoneProcess(config) {
         this._linphoneProcess = spawn('linphonec', ['-c', config]);
 
-        ChildrenManager.length = 5;
         ChildrenManager.addChild(this._linphoneProcess);
 
         bindLinphoneEvents.call(this);
@@ -162,6 +164,7 @@ function Linphone(configuration) {
         this.on(Linphone.Events.CONFIG_WRITTEN, startLinphoneProcess.bind(this));
         this.on(Linphone.Events.READY, function () {
             var target = this.configuration.file.replace('conf', 'wav');
+            this._write("soundcard list");
             this._write("soundcard use files");
             this.on(Linphone.Events.SOUNDCARD_CHANGED, function () {
                 this._write("record " + target);
@@ -214,6 +217,12 @@ function Linphone(configuration) {
             newData.proxy_0.reg_identity = 'sip:' + configuration.sip + '@' + configuration.host;
             newData.proxy_0.reg_proxy = '<sip:' + configuration.host + '>';
 
+            var path = fs.realpathSync(__dirname + '/../assets');
+
+
+            newData.sound.remote_ring = path + '/30sec_silence.wav';
+            newData.sound.local_ring = path + '/30sec_silence.wav';
+
             //newData.sound.capture_dev_id = 'ALSA: default device';
             //newData.sound.playback_dev_id = 'ALSA: default device';
             //newData.sound.ringer_dev_id = 'ALSA: default device';
@@ -221,8 +230,9 @@ function Linphone(configuration) {
             //'linphonecsh generic 'soundcard use files'
             //$ linphonecsh generic 'play /tmp/sent.wav'
             //$ linphonecsh generic 'record /tmp/received.wav''
+            var out = ini.stringify(newData)
 
-            fs.writeFile(filePath, ini.stringify(newData), onFileWritten.bind(this));
+            fs.writeFile(filePath, out, onFileWritten.bind(this));
         }
 
         /**
@@ -381,6 +391,8 @@ function Linphone(configuration) {
                  * @type {string}
                  */
                 this.emit(Linphone.Events.UNREGISTERED, line, this);
+            } else {
+                var x = 1;
             }
 
         }
@@ -454,7 +466,7 @@ Linphone.prototype.getSipNumber = function () {
 };
 
 Linphone.prototype.getListenersCount = function (eventName) {
-    if (this._events.hasOwnProperty(eventName)) {
+    if (Object.hasOwnProperty.call(this._events, eventName)) {
         if (typeof this._events[eventName] == "function") {
             return 1
         } else {
