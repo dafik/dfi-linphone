@@ -261,6 +261,8 @@ class Linphone extends EventEmitter {
             this._logger.error(err.message + err.stack);
         };
 
+        let configuration2 = this._configuration;
+        this._logger.info("create instance port:%s rtp:%s sip:%s host:%s", configuration2.port, configuration2.rtpPort, configuration2.sip, configuration2.host, configuration2.file);
         this._linphoneProcess = spawn("linphonec", ["-c", conf]);
 
         ChildrenManager.addChild(this._linphoneProcess);
