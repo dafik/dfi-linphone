@@ -47,6 +47,10 @@ class Linphone extends EventEmitter {
     private _logger;
     private _output;
 
+    public get configuration() {
+        return Object.assign({}, this._configuration);
+    };
+
     constructor(configuration) {
         super();
         this._logger = new DebugLogger("dfi:linphone");

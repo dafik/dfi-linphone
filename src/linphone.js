@@ -68,6 +68,10 @@ class Linphone extends events_1.EventEmitter {
         let x = symbolName.match(/Symbol\((.*)\)/);
         return x[1];
     }
+    get configuration() {
+        return Object.assign({}, this._configuration);
+    }
+    ;
     makeCall(target) {
         this._logger.info(this._configuration.sip + ": making call to : " + target);
         this._write("call " + target);
