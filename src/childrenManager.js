@@ -1,14 +1,25 @@
 "use strict";
-const child_process = require("child_process");
 let _children = new Map();
 class ChildrenManager {
-    static terminate() {
+    static terminate(callback, context) {
+        if (_children.size === 0) {
+            if (typeof callback === "function") {
+                callback.call(context);
+            }
+        }
         _children.forEach((child) => {
+            child.on("exit", () => {
+                if (_children.size === 0) {
+                    if (typeof callback === "function") {
+                        callback.call(context);
+                    }
+                }
+            });
             child.kill("SIGTERM");
         });
     }
     static addChild(child) {
-        if (!child instanceof child_process.ChildProcess) {
+        if (child.constructor.name !== "ChildProcess") {
             throw new TypeError("child must be ChildProcess prototype found: " + child.constructor.name);
         }
         _children.set(child.pid, child);
@@ -21,16 +32,6 @@ class ChildrenManager {
     }
     static get children() {
         return _children;
-    }
-    addChildren(child) {
-        if (child instanceof Array) {
-            child.forEach((child1) => {
-                ChildrenManager.addChild(child1);
-            });
-        }
-        else {
-            ChildrenManager.addChild(child);
-        }
     }
     static get length() {
         return _children.size;

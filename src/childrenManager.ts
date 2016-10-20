@@ -1,18 +1,28 @@
-// let ChildProcess = require("child_process").ChildProcess;
 import {ChildProcess} from "child_process";
-import child_process = require("child_process");
 let _children: Map<number, ChildProcess> = new Map();
 
 class ChildrenManager {
 
-    public static terminate() {
+    public static terminate(callback?, context?) {
+        if (_children.size === 0) {
+            if (typeof  callback === "function") {
+                callback.call(context);
+            }
+        }
         _children.forEach((child) => {
+            child.on("exit", () => {
+                if (_children.size === 0) {
+                    if (typeof  callback === "function") {
+                        callback.call(context);
+                    }
+                }
+            });
             child.kill("SIGTERM");
         });
     }
 
     public static addChild(child: ChildProcess) {
-        if (!child instanceof child_process.ChildProcess) {
+        if (child.constructor.name !== "ChildProcess") {
             throw new TypeError("child must be ChildProcess prototype found: " + child.constructor.name);
         }
         _children.set(child.pid, child);
@@ -28,16 +38,6 @@ class ChildrenManager {
 
     public static get children() {
         return _children;
-    }
-
-    public addChildren(child: ChildProcess | ChildProcess[]) {
-        if (child instanceof Array) {
-            child.forEach((child1) => {
-                ChildrenManager.addChild(child1);
-            });
-        } else {
-            ChildrenManager.addChild(child);
-        }
     }
 
     public static get length(): number {

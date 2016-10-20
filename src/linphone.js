@@ -6,7 +6,6 @@ const fs_1 = require("fs");
 const ini = require("ini");
 const DebugLogger = require("local-dfi-debug-logger/debugLogger");
 const ChildrenManager = require("./childrenManager");
-let logger = new DebugLogger("dfi:linphone");
 class Linphone extends events_1.EventEmitter {
     constructor(configuration) {
         super();
@@ -16,19 +15,20 @@ class Linphone extends events_1.EventEmitter {
             password: "not set",
             port: 5060,
             rtpPort: 7078,
-            sip: "not set"
+            sip: null,
+            technology: "SIP"
         };
         this._configuration = configuration || config;
         this._incoming = {};
         this._calls = {};
         this._output = [];
         this.registered = false;
-        if (false) {
-            this._bindProcessSignals();
-        }
         this.on(Linphone.events.ERROR, (err) => {
             this._logger.error(err);
         });
+        /*        if (false) {
+         this._bindProcessSignals();
+         }*/
         this.on(Linphone.events.READY, () => {
             let target = this._configuration.file.replace("conf", "wav");
             this._write("soundcard use files");
@@ -80,7 +80,7 @@ class Linphone extends events_1.EventEmitter {
         this._logger.info(this._configuration.sip + " :answering");
         let msg = "answer";
         if (typeof callNumber !== "undefined") {
-            msg = msg + " " + callNumber;
+            msg = msg + " " + callNumber.toString();
         }
         this._write(msg);
     }
@@ -89,7 +89,7 @@ class Linphone extends events_1.EventEmitter {
         this._logger.info(this._configuration.sip + ": ending call");
         let msg = "terminate";
         if (typeof callNumber !== "undefined") {
-            msg = msg + " " + callNumber;
+            msg = msg + " " + callNumber.toString();
         }
         this._write(msg);
     }
@@ -199,12 +199,13 @@ class Linphone extends events_1.EventEmitter {
             this.emit(Linphone.events.UNREGISTERED, line, this);
         }
         else {
+            this._logger.info("unknown line %s", line);
         }
     }
     _bindLinphoneStdio() {
         let stdOutListener = Linphone.newLineStream((message) => {
             message = message.replace("linphonec>", "").trim();
-            this._logger.debug("stdout-" + this._configuration.sip + ": " + message);
+            this._logger.debug("stdout-" + this._configuration.sip.toString(10) + ": " + message);
             this._output.push(message);
             this._processIncomingLine(message);
         }, this);
@@ -213,7 +214,7 @@ class Linphone extends events_1.EventEmitter {
             let lines = data.toString().split("\n");
             lines.forEach(line => {
                 if (line && !line.match(/ALSA lib/)) {
-                    this._logger.warn("stderr-" + this._configuration.sip + ": " + data);
+                    this._logger.warn("stderr-" + this._configuration.sip.toString(10) + ": " + data);
                 }
             });
         });
@@ -231,12 +232,12 @@ class Linphone extends events_1.EventEmitter {
         this._linphoneProcess.stderr.on("error", onError);
         this._linphoneProcess.stdin.on("error", onError);
         this._linphoneProcess.stdout.on("error", onError);
-        this._linphoneProcess.on("exit", (arg) => {
-            this._logger.info("emitting-" + this._configuration.sip + ": " + Linphone._eventName(Linphone.events.END));
+        this._linphoneProcess.on("exit", () => {
+            this._logger.info("emitting-" + this._configuration.sip.toString(10) + ": " + Linphone._eventName(Linphone.events.END));
             this.emit(Linphone.events.END, this);
         });
-        this._linphoneProcess.on("close", (arg) => {
-            this._logger.info("emitting-" + this._configuration.sip + ": " + Linphone._eventName(Linphone.events.CLOSE));
+        this._linphoneProcess.on("close", () => {
+            this._logger.info("emitting-" + this._configuration.sip.toString(10) + ": " + Linphone._eventName(Linphone.events.CLOSE));
             this.emit(Linphone.events.CLOSE, this);
             this.removeAllListeners();
             this._linphoneProcess.on("error", onError);
@@ -264,8 +265,8 @@ class Linphone extends events_1.EventEmitter {
             newData.sip.sip_port = linConfig.port;
             newData.rtp.audio_rtp_port = linConfig.rtpPort;
             newData.auth_info_0.passwd = linConfig.password;
-            newData.auth_info_0.username = linConfig.sip;
-            newData.proxy_0.reg_identity = "sip:" + linConfig.sip + "@" + linConfig.host;
+            newData.auth_info_0.username = linConfig.sip.toString(10);
+            newData.proxy_0.reg_identity = "sip:" + linConfig.sip.toString(10) + "@" + linConfig.host;
             newData.proxy_0.reg_proxy = "<sip:" + linConfig.host + ">";
             // newData.sound.capture_dev_id = "ALSA: default device";
             // newData.sound.playback_dev_id = "ALSA: default device";
@@ -279,37 +280,8 @@ class Linphone extends events_1.EventEmitter {
             });
         });
     }
-    _bindProcessSignals() {
-        // let signals = ["SIGUSR1", "SIGTERM", "SIGPIPE", "SIGHUP", "SIGTERM", "SIGINT", "exit", "uncaughtException"];
-        process.on("SIGUSR1", () => {
-            logger.info("Got SIGUSR1.  Press Control-D to exit.");
-        });
-        process.on("SIGTERM", () => {
-            logger.info("Got SIGTERM.  Press Control-D to exit.");
-        });
-        process.on("SIGPIPE", () => {
-            logger.info("Got Got.  Press Control-D to exit.");
-        });
-        process.on("SIGHUP", () => {
-            logger.info("Got SIGHUP.  Press Control-D to exit.");
-        });
-        process.on("SIGTERM", () => {
-            logger.info("Got SIGTERM.  Press Control-D to exit.");
-        });
-        process.on("SIGINT", () => {
-            logger.info("Got SIGINT.  Press Control-D to exit.");
-        });
-        process.on("exit", () => {
-            this._linphoneProcess.kill();
-            // logger.info("About to exit with code:", code);
-        });
-        process.on("uncaughtException", (err) => {
-            logger.info("Caught exception: " + err);
-            throw err;
-        });
-    }
 }
-const EVENTS = {
+const EVENTS = Object.assign({
     CLOSE: Symbol("close"),
     CONFIG_WRITTEN: Symbol("configWritten"),
     ERROR: Symbol("error"),
@@ -317,12 +289,13 @@ const EVENTS = {
     RECORD_SET: Symbol("recordFileSet"),
     REGISTERED: Symbol("registered"),
     SOUNDCARD_CHANGED: Symbol("soundcardChanged"),
-    STARTED: Symbol("processStarted"),
+    STARTED: Symbol("processStarted")
+}, {
     ANSWERED: Symbol("answered"),
     END: Symbol("end"),
     END_CALL: Symbol("endCall"),
     INCOMING: Symbol("incoming"),
     UNREGISTERED: Symbol("unregistered")
-};
+});
 module.exports = Linphone;
 //# sourceMappingURL=linphone.js.map
