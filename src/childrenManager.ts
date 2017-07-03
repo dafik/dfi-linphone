@@ -1,5 +1,5 @@
 import {ChildProcess} from "child_process";
-let _children: Map<number, ChildProcess> = new Map();
+const _children: Map<number, ChildProcess> = new Map();
 
 class ChildrenManager {
 

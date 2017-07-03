@@ -5,7 +5,7 @@ import {ILinphoneConfig} from "../src/interfaces";
 let endpoint1: Linphone;
 let endpoint2: Linphone;
 
-let conf1: ILinphoneConfig = {
+const conf1: ILinphoneConfig = {
     host: "pbx",
     password: "theinue",
     port: 5061,
@@ -13,7 +13,7 @@ let conf1: ILinphoneConfig = {
     sip: 159,
     technology: "SIP"
 };
-let conf2: ILinphoneConfig = {
+const conf2: ILinphoneConfig = {
     host: "pbx",
     password: "aedahmu",
     port: 5062,

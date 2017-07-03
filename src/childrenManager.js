@@ -1,5 +1,5 @@
 "use strict";
-let _children = new Map();
+const _children = new Map();
 class ChildrenManager {
     static terminate(callback, context) {
         if (_children.size === 0) {

@@ -10,7 +10,7 @@ describe("linphone", () => {
 
     function onCreate(done) {
         this.timeout(0);
-        let linphone = new Linphone({
+        const linphone = new Linphone({
             host: "pbx",
             password: "seivieb",
             port: 5061,

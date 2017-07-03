@@ -1,9 +1,10 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
 const Linphone = require("../src/linphone");
 const ChildrenManager = require("../src/childrenManager");
 let endpoint1;
-let conf1 = {
+const conf1 = {
     host: "pbx",
     password: "theinue",
     port: 5061,
