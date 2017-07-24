@@ -3,9 +3,9 @@ import {createHash} from "crypto";
 import {EventEmitter} from "events";
 import {readFile, writeFile} from "fs";
 import {ILinphoneConfig} from "./interfaces";
-import ini = require("ini");
 
-import DebugLogger = require("local-dfi-debug-logger/debugLogger");
+import DebugLogger from "local-dfi-debug-logger";
+import ini = require("ini");
 import ChildrenManager = require("./childrenManager");
 
 class Linphone extends EventEmitter {

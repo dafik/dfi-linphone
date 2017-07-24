@@ -36,7 +36,7 @@ describe("linphone", () => {
     it("create 2", onCreate);
 
     it("manager", (done) => {
-        assert.equal(ChildrenManager.length, 0);
+        assert.equal(ChildrenManager.size, 0);
         assert.equal(ChildrenManager.children.size, 0);
 
         done();

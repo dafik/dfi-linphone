@@ -33,7 +33,7 @@ class ChildrenManager {
     static get children() {
         return _children;
     }
-    static get length() {
+    static get size() {
         return _children.size;
     }
 }

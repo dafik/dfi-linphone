@@ -3,8 +3,8 @@ const child_process_1 = require("child_process");
 const crypto_1 = require("crypto");
 const events_1 = require("events");
 const fs_1 = require("fs");
+const local_dfi_debug_logger_1 = require("local-dfi-debug-logger");
 const ini = require("ini");
-const DebugLogger = require("local-dfi-debug-logger/debugLogger");
 const ChildrenManager = require("./childrenManager");
 class Linphone extends events_1.EventEmitter {
     static get events() {
@@ -36,7 +36,7 @@ class Linphone extends events_1.EventEmitter {
     }
     constructor(configuration) {
         super();
-        this._logger = new DebugLogger("dfi:linphone");
+        this._logger = new local_dfi_debug_logger_1.default("dfi:linphone");
         const config = {
             host: "localhost",
             password: "not set",

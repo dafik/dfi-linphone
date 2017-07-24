@@ -40,7 +40,7 @@ class ChildrenManager {
         return _children;
     }
 
-    public static get length(): number {
+    public static get size(): number {
         return _children.size;
     }
 }
