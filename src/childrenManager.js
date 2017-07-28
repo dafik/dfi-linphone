@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const _children = new Map();
 class ChildrenManager {
     static terminate(callback, context) {
@@ -39,5 +40,5 @@ class ChildrenManager {
 }
 process.on("exit", ChildrenManager.terminate);
 process.on("uncaughtException", ChildrenManager.terminate);
-module.exports = ChildrenManager;
+exports.default = ChildrenManager;
 //# sourceMappingURL=childrenManager.js.map

@@ -1,11 +1,12 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const child_process_1 = require("child_process");
 const crypto_1 = require("crypto");
 const events_1 = require("events");
 const fs_1 = require("fs");
 const local_dfi_debug_logger_1 = require("local-dfi-debug-logger");
+const childrenManager_1 = require("./childrenManager");
 const ini = require("ini");
-const ChildrenManager = require("./childrenManager");
 class Linphone extends events_1.EventEmitter {
     static get events() {
         return EVENTS;
@@ -222,7 +223,7 @@ class Linphone extends events_1.EventEmitter {
         const configuration2 = this._configuration;
         this._logger.info("create instance port:%s rtp:%s sip:%s host:%s", configuration2.port, configuration2.rtpPort, configuration2.sip, configuration2.host, configuration2.file);
         this._linphoneProcess = child_process_1.spawn("linphonec", ["-c", conf]);
-        ChildrenManager.addChild(this._linphoneProcess);
+        childrenManager_1.default.addChild(this._linphoneProcess);
         this._linphoneProcess.on("error", onError);
         this._linphoneProcess.stderr.on("error", onError);
         this._linphoneProcess.stdin.on("error", onError);
@@ -291,5 +292,5 @@ const EVENTS = {
     STARTED: Symbol("processStarted"),
     UNREGISTERED: Symbol("unregistered")
 };
-module.exports = Linphone;
+exports.default = Linphone;
 //# sourceMappingURL=linphone.js.map

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Linphone = require("../src/linphone");
-const ChildrenManager = require("../src/childrenManager");
+const childrenManager_1 = require("../src/childrenManager");
+const linphone_1 = require("../src/linphone");
 let endpoint1;
 let endpoint2;
 const conf1 = {
@@ -23,14 +23,14 @@ const conf2 = {
 describe("linphone", () => {
     function onBefore(done) {
         this.timeout(0);
-        endpoint1 = new Linphone(conf1);
-        endpoint2 = new Linphone(conf2);
-        endpoint1.once(Linphone.events.REGISTERED, () => {
+        endpoint1 = new linphone_1.default(conf1);
+        endpoint2 = new linphone_1.default(conf2);
+        endpoint1.once(linphone_1.default.events.REGISTERED, () => {
             if (endpoint2.registered) {
                 done();
             }
         });
-        endpoint2.once(Linphone.events.REGISTERED, () => {
+        endpoint2.once(linphone_1.default.events.REGISTERED, () => {
             if (endpoint1.registered) {
                 done();
             }
@@ -39,14 +39,14 @@ describe("linphone", () => {
     function call(done) {
         this.timeout(0);
         let waitEndCall = 0;
-        endpoint1.on(Linphone.events.ANSWERED, () => {
+        endpoint1.on(linphone_1.default.events.ANSWERED, () => {
             waitEndCall = waitEndCall + 2;
             setTimeout(() => {
                 endCall(endpoint1);
                 endCall(endpoint2);
             }, 200);
         });
-        endpoint2.on(Linphone.events.INCOMING, (line, id) => {
+        endpoint2.on(linphone_1.default.events.INCOMING, (line, id) => {
             endpoint2.answer(id);
         });
         makeCall(endpoint1, endpoint2);
@@ -55,7 +55,7 @@ describe("linphone", () => {
         }
         function endCall(linphone) {
             linphone.endCall();
-            linphone.on(Linphone.events.END_CALL, checkEnd);
+            linphone.on(linphone_1.default.events.END_CALL, checkEnd);
         }
         function checkEnd() {
             waitEndCall--;
@@ -67,7 +67,7 @@ describe("linphone", () => {
     }
     function onAfter(done) {
         this.timeout(0);
-        ChildrenManager.terminate(done);
+        childrenManager_1.default.terminate(done);
     }
     before(onBefore);
     it("call ", call);

@@ -1,4 +1,5 @@
 import {ChildProcess} from "child_process";
+
 const _children: Map<number, ChildProcess> = new Map();
 
 class ChildrenManager {
@@ -48,4 +49,4 @@ class ChildrenManager {
 process.on("exit", ChildrenManager.terminate);
 process.on("uncaughtException", ChildrenManager.terminate);
 
-export = ChildrenManager;
+export default ChildrenManager;

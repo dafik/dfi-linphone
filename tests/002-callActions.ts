@@ -1,6 +1,6 @@
-import Linphone = require("../src/linphone");
-import ChildrenManager = require("../src/childrenManager");
+import ChildrenManager from "../src/childrenManager";
 import {ILinphoneConfig} from "../src/interfaces";
+import Linphone from "../src/linphone";
 
 let endpoint1: Linphone;
 let endpoint2: Linphone;

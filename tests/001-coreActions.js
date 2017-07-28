@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
-const Linphone = require("../src/linphone");
-const ChildrenManager = require("../src/childrenManager");
+const childrenManager_1 = require("../src/childrenManager");
+const linphone_1 = require("../src/linphone");
 describe("linphone", () => {
     function onBefore(done) {
         this.timeout(0);
@@ -10,7 +10,7 @@ describe("linphone", () => {
     }
     function onCreate(done) {
         this.timeout(0);
-        const linphone = new Linphone({
+        const linphone = new linphone_1.default({
             host: "pbx",
             password: "seivieb",
             port: 5061,
@@ -18,13 +18,13 @@ describe("linphone", () => {
             sip: 154,
             technology: "SIP"
         });
-        linphone.once(Linphone.events.REGISTERED, () => {
-            linphone.once(Linphone.events.CLOSE, () => {
+        linphone.once(linphone_1.default.events.REGISTERED, () => {
+            linphone.once(linphone_1.default.events.CLOSE, () => {
                 done();
             });
-            ChildrenManager.terminate();
+            childrenManager_1.default.terminate();
         });
-        linphone.on(Linphone.events.ERROR, (err) => {
+        linphone.on(linphone_1.default.events.ERROR, (err) => {
             throw err;
         });
     }
@@ -32,8 +32,8 @@ describe("linphone", () => {
     it("create 1", onCreate);
     it("create 2", onCreate);
     it("manager", (done) => {
-        assert.equal(ChildrenManager.size, 0);
-        assert.equal(ChildrenManager.children.size, 0);
+        assert.equal(childrenManager_1.default.size, 0);
+        assert.equal(childrenManager_1.default.children.size, 0);
         done();
     });
 });

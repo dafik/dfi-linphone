@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
-const Linphone = require("../src/linphone");
-const ChildrenManager = require("../src/childrenManager");
+const childrenManager_1 = require("../src/childrenManager");
+const linphone_1 = require("../src/linphone");
 let endpoint1;
 const conf1 = {
     host: "pbx",
@@ -15,8 +15,8 @@ const conf1 = {
 describe("linphone", () => {
     function onBefore(done) {
         this.timeout(0);
-        endpoint1 = new Linphone(conf1);
-        endpoint1.once(Linphone.events.REGISTERED, () => {
+        endpoint1 = new linphone_1.default(conf1);
+        endpoint1.once(linphone_1.default.events.REGISTERED, () => {
             done();
         });
     }
@@ -24,8 +24,8 @@ describe("linphone", () => {
         this.timeout(0);
         assert.equal(endpoint1.getSipNumber(), conf1.sip);
         assert.equal(endpoint1.getInterface(), conf1.technology + "/" + conf1.sip);
-        endpoint1.on(Linphone.events.UNREGISTERED, () => {
-            endpoint1.on(Linphone.events.REGISTERED, () => {
+        endpoint1.on(linphone_1.default.events.UNREGISTERED, () => {
+            endpoint1.on(linphone_1.default.events.REGISTERED, () => {
                 done();
             });
             endpoint1.register();
@@ -34,7 +34,7 @@ describe("linphone", () => {
     }
     function onAfter(done) {
         this.timeout(0);
-        ChildrenManager.terminate(done);
+        childrenManager_1.default.terminate(done);
     }
     before(onBefore);
     it("call ", testRegister);

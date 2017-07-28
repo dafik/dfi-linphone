@@ -5,8 +5,8 @@ import {readFile, writeFile} from "fs";
 import {ILinphoneConfig} from "./interfaces";
 
 import DebugLogger from "local-dfi-debug-logger";
+import ChildrenManager from "./childrenManager";
 import ini = require("ini");
-import ChildrenManager = require("./childrenManager");
 
 class Linphone extends EventEmitter {
 
@@ -380,4 +380,4 @@ const EVENTS = {
     UNREGISTERED: Symbol("unregistered")
 };
 
-export = Linphone;
+export default Linphone;
