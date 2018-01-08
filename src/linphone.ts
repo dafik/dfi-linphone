@@ -4,7 +4,7 @@ import {EventEmitter} from "events";
 import {readFile, writeFile} from "fs";
 import {ILinphoneConfig} from "./interfaces";
 
-import DebugLogger from "local-dfi-debug-logger";
+import DebugLogger from "dfi-debug-logger";
 import ChildrenManager from "./childrenManager";
 import ini = require("ini");
 
