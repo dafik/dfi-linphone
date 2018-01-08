@@ -6,7 +6,7 @@ import Linphone from "../src/linphone";
 
 let sipConfig: { [key: string]: ILinphoneConfig };
 
-describe("linphone", () => {
+describe("core", () => {
     function onBefore(done) {
         this.timeout(0);
         sipConfig = JSON.parse(readFileSync("tests/config.json", "utf8"));

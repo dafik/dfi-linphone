@@ -7,7 +7,7 @@ let sipConfig: { [key: string]: ILinphoneConfig };
 let endpoint1: Linphone;
 let endpoint2: Linphone;
 
-describe("linphone", () => {
+describe("call", () => {
     function onBefore(done) {
         this.timeout(0);
 

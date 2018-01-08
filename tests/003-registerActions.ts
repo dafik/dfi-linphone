@@ -7,7 +7,7 @@ import Linphone from "../src/linphone";
 let sipConfig: { [key: string]: ILinphoneConfig };
 let endpoint1: Linphone;
 
-describe("linphone", () => {
+describe("register", () => {
     function onBefore(done) {
         this.timeout(0);
 
