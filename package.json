@@ -8,10 +8,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.dev:z.wieczorek/dfi-linphone.git"
+    "url": "https://github.com/dafik/dfi-linphone.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Zbyszek Wieczorek",
+    "email": "zbyszek.wieczorek at gmail.com"
+  },
+  "license": "MIT",
   "dependencies": {
     "ini": ">=1.3.0",
     "dfi-debug-logger": "^0.1.5"

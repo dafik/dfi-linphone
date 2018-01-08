@@ -1,33 +1,20 @@
+import {readFileSync} from "fs";
 import ChildrenManager from "../src/childrenManager";
 import {ILinphoneConfig} from "../src/interfaces";
 import Linphone from "../src/linphone";
 
+let sipConfig: { [key: string]: ILinphoneConfig };
 let endpoint1: Linphone;
 let endpoint2: Linphone;
-
-const conf1: ILinphoneConfig = {
-    host: "pbx",
-    password: "theinue",
-    port: 5061,
-    rtpPort: 7078,
-    sip: 159,
-    technology: "SIP"
-};
-const conf2: ILinphoneConfig = {
-    host: "pbx",
-    password: "aedahmu",
-    port: 5062,
-    rtpPort: 7079,
-    sip: 158,
-    technology: "SIP"
-};
 
 describe("linphone", () => {
     function onBefore(done) {
         this.timeout(0);
 
-        endpoint1 = new Linphone(conf1);
-        endpoint2 = new Linphone(conf2);
+        sipConfig = JSON.parse(readFileSync("tests/config.json", "utf8"));
+
+        endpoint1 = new Linphone(sipConfig.conf159);
+        endpoint2 = new Linphone(sipConfig.conf158);
 
         endpoint1.once(Linphone.events.REGISTERED, () => {
             if (endpoint2.registered) {

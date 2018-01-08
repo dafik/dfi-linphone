@@ -1,0 +1,26 @@
+{
+  "conf154": {
+    "host": "pbx",
+    "password": "***",
+    "port": 5061,
+    "rtpPort": 7078,
+    "sip": 154,
+    "technology": "SIP"
+  },
+  "conf158": {
+    "host": "pbx",
+    "password": "***",
+    "port": 5062,
+    "rtpPort": 7079,
+    "sip": 158,
+    "technology": "SIP"
+  },
+  "conf159": {
+    "host": "pbx",
+    "password": "***",
+    "port": 5061,
+    "rtpPort": 7078,
+    "sip": 159,
+    "technology": "SIP"
+  }
+}
