@@ -1,1 +1,1 @@
-linphonec wrapper
+linphonec node.js wrapper
