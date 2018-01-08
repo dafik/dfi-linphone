@@ -1,23 +1,21 @@
 import * as assert from "assert";
+import {readFileSync} from "fs";
 import ChildrenManager from "../src/childrenManager";
+import {ILinphoneConfig} from "../src/interfaces";
 import Linphone from "../src/linphone";
+
+let sipConfig: { [key: string]: ILinphoneConfig };
 
 describe("linphone", () => {
     function onBefore(done) {
         this.timeout(0);
+        sipConfig = JSON.parse(readFileSync("tests/config.json", "utf8"));
         done();
     }
 
     function onCreate(done) {
         this.timeout(0);
-        const linphone = new Linphone({
-            host: "pbx",
-            password: "seivieb",
-            port: 5061,
-            rtpPort: 7078,
-            sip: 154,
-            technology: "SIP"
-        });
+        const linphone = new Linphone(sipConfig.conf154);
 
         linphone.once(Linphone.events.REGISTERED, () => {
             linphone.once(Linphone.events.CLOSE, () => {
